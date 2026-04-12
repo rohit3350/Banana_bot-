@@ -287,51 +287,7 @@ async def drm_handler(bot: Client, m: Message):
             if "acecwply" in url:
                 cmd = f'yt-dlp -o "{name}.%(ext)s" -f "bestvideo[height<={raw_text2}]+bestaudio" --hls-prefer-ffmpeg --no-keep-video --remux-video mkv --no-warning "{url}"'
          
-            elif 'classplusapp' in url or "testbook.com" in url or "classplusapp.com/drm" in url or "media-cdn.classplusapp.com/drm" in url:
-                if '&contentHashIdl=' in url:
-                    url, contentId = url.split('&contentHashIdl=')
-                else:
-                    # Fallback for URLs without contentHashIdl
-                    contentId = url.split('/')[-1] if '/' in url else url
-                
-                headers = {
-                    'host': 'api.classplusapp.com',
-                    'x-access-token': f'{cptoken}',    
-                    'accept-language': 'EN',
-                    'api-version': '18',
-                    'app-version': '1.4.73.2',
-                    'build-number': '35',
-                    'connection': 'Keep-Alive',
-                    'content-type': 'application/json',
-                    'device-details': 'Xiaomi_Redmi 7_SDK-32',
-                    'device-id': 'c28d3cb16bbdac01',
-                    'region': 'IN',
-                    'user-agent': 'Mobile-Android',
-                    'webengage-luid': '00000187-6fe4-5d41-a530-26186858be4c',
-                    'accept-encoding': 'gzip'
-                }
-                
-                params = {
-                    'contentId': contentId,
-                    'offlineDownload': "false"
-                }
-
-                res = requests.get("https://api.classplusapp.com/cams/uploader/video/jw-signed-url", params=params, headers=headers).json()
-                
-                if "testbook.com" in url or "classplusapp.com/drm" in url or "media-cdn.classplusapp.com/drm" in url:
-                    url = res['drmUrls']['manifestUrl']
-                    mpd, keys = helper.get_mps_and_keys(url)
-                    url = mpd
-                    keys_string = " ".join([f"--key {key}" for key in keys])
-                else:
-                    url = res["url"]
-
-            elif "d1d34p8vz63oiq" in url or "sec1.pw.live" in url:
-                url = f"https://anonymouspwplayer-907e62cf4891.herokuapp.com/pw?url={url}&token={pwtoken}"
-                                      
-            elif 'encrypted.m' in url:
-                appxkey = url.split('*')[1]
-                url = url.split('*')[0]
+            
 
             if "youtu" in url:
                 ytf = f"bv*[height<={raw_text2}][ext=mp4]+ba[ext=m4a]/b[height<=?{raw_text2}]"
@@ -362,7 +318,68 @@ async def drm_handler(bot: Client, m: Message):
                         if caption == "/cc1":
                             cc = f'[🎥]Vid Id : {str(count).zfill(3)}\n**Video Title :** `{v_name} [{res}p].mkv`\n<blockquote><b>Batch Name : {b_name}\nTopic Name : {t_name}</b></blockquote>\n\n**Extracted by➤**{CR}\n'
                             cc1 = f'[📕]Pdf Id : {str(count).zfill(3)}\n**File Title :** `{v_name}.pdf`\n<blockquote><b>Batch Name : {b_name}\nTopic Name : {t_name}</b></blockquote>\n\n**Extracted by➤**{CR}\n'
-                            cczip = f'[📁]Zip Id : {str(count).zfill(3)}\n**Zip Title :** `{v_name}.zip`\n<blockquote><b>Batch Name : {b_name}\nTopic Name : {t_name}</b></blockquote>\n\n**Extracted by➤**{CR}\n'
+                        elif 'classplusapp' in url or "testbook.com" in url or "classplusapp.com/drm" in url or "media-cdn.classplusapp.com/drm" in url:
+    # Extract contentId from URL
+    if '&contentHashIdl=' in url:
+        base_url, contentId = url.split('&contentHashIdl=')
+    elif 'contentHashIdl=' in url:
+        parts = url.split('contentHashIdl=')
+        base_url = parts[0]
+        contentId = parts[1].split('&')[0] if '&' in parts[1] else parts[1]
+    else:
+        # Fallback - try to extract ID from URL pattern
+        contentId = url.split('/')[-1].split('?')[0] if '/' in url else url
+    
+    headers = {
+        'host': 'api.classplusapp.com',
+        'x-access-token': f'{cptoken}',    
+        'accept-language': 'EN',
+        'api-version': '18',
+        'app-version': '1.4.73.2',
+        'build-number': '35',
+        'connection': 'Keep-Alive',
+        'content-type': 'application/json',
+        'device-details': 'Xiaomi_Redmi 7_SDK-32',
+        'device-id': 'c28d3cb16bbdac01',
+        'region': 'IN',
+        'user-agent': 'Mobile-Android',
+        'webengage-luid': '00000187-6fe4-5d41-a530-26186858be4c',
+        'accept-encoding': 'gzip'
+    }
+    
+    params = {
+        'contentId': contentId,
+        'offlineDownload': "false"
+    }
+
+    try:
+        res = requests.get("https://api.classplusapp.com/cams/uploader/video/jw-signed-url", params=params, headers=headers).json()
+        
+        if "testbook.com" in base_url if 'base_url' in locals() else "testbook.com" in url or "classplusapp.com/drm" in url or "media-cdn.classplusapp.com/drm" in url:
+            if 'drmUrls' in res and 'manifestUrl' in res['drmUrls']:
+                mpd_url = res['drmUrls']['manifestUrl']
+                mpd, keys = helper.get_mps_and_keys(mpd_url)
+                url = mpd
+                keys_string = " ".join([f"--key {key}" for key in keys])
+            else:
+                url = res.get("url", url)
+                keys_string = ""
+        else:
+            url = res.get("url", url)
+            keys_string = ""
+    except Exception as e:
+        print(f"ClassPlus API Error: {e}")
+        # Keep original URL if API fails
+        keys_string = ""
+
+elif "d1d34p8vz63oiq" in url or "sec1.pw.live" in url:
+    url = f"https://anonymouspwplayer-907e62cf4891.herokuapp.com/pw?url={url}&token={pwtoken}"
+    keys_string = ""
+
+elif 'encrypted.m' in url:
+    appxkey = url.split('*')[1] if '*' in url else ""
+    url = url.split('*')[0]
+    keys_string = ""    cczip = f'[📁]Zip Id : {str(count).zfill(3)}\n**Zip Title :** `{v_name}.zip`\n<blockquote><b>Batch Name : {b_name}\nTopic Name : {t_name}</b></blockquote>\n\n**Extracted by➤**{CR}\n'
                             ccimg = f'[🖼️]Img Id : {str(count).zfill(3)}\n**Img Title :** `{v_name}.jpg`\n<blockquote><b>Batch Name : {b_name}\nTopic Name : {t_name}</b></blockquote>\n\n**Extracted by➤**{CR}\n'
                             cchtml = f'[🌐]Html Id : {str(count).zfill(3)}\n**Html Title :** `{v_name}.html`\n<blockquote><b>Batch Name : {b_name}\nTopic Name : {t_name}</b></blockquote>\n\n**Extracted by➤**{CR}\n'
                             ccyt = f'[🎥]Vid Id : {str(count).zfill(3)}\n**Video Title :** `{v_name}.mp4`\n<a href="{url}">__**Click Here to Watch Stream**__</a>\n<blockquote><b>Batch Name : {b_name}\nTopic Name : {t_name}</b></blockquote>\n\n**Extracted by➤**{CR}\n'
