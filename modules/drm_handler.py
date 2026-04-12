@@ -291,59 +291,77 @@ async def drm_handler(bot: Client, m: Message):
                 cmd = f'yt-dlp -o "{name}.%(ext)s" -f "bestvideo[height<={raw_text2}]+bestaudio" --hls-prefer-ffmpeg --no-keep-video --remux-video mkv --no-warning "{url}"'
          
             elif 'classplusapp' in url or "testbook.com" in url or "classplusapp.com/drm" in url or "media-cdn.classplusapp.com/drm" in url:
-                # Extract contentId from URL
-                base_url = url
-                if '&contentHashIdl=' in url:
-                    base_url, contentId = url.split('&contentHashIdl=')
-                elif 'contentHashIdl=' in url:
-                    parts = url.split('contentHashIdl=')
-                    base_url = parts[0]
-                    contentId = parts[1].split('&')[0] if '&' in parts[1] else parts[1]
-                else:
-                    # Fallback - try to extract ID from URL pattern
-                    contentId = url.split('/')[-1].split('?')[0] if '/' in url else url
-                
-                headers = {
-                    'host': 'api.classplusapp.com',
-                    'x-access-token': f'{cptoken}',    
-                    'accept-language': 'EN',
-                    'api-version': '18',
-                    'app-version': '1.4.73.2',
-                    'build-number': '35',
-                    'connection': 'Keep-Alive',
-                    'content-type': 'application/json',
-                    'device-details': 'Xiaomi_Redmi 7_SDK-32',
-                    'device-id': 'c28d3cb16bbdac01',
-                    'region': 'IN',
-                    'user-agent': 'Mobile-Android',
-                    'webengage-luid': '00000187-6fe4-5d41-a530-26186858be4c',
-                    'accept-encoding': 'gzip'
-                }
-                
-                params = {
-                    'contentId': contentId,
-                    'offlineDownload': "false"
-                }
+    # Extract contentId from URL
+    base_url = url
+    
+    # Check for different parameter patterns
+    if '&contentHashId=' in url:
+        base_url, contentId = url.split('&contentHashId=')
+    elif 'contentHashId=' in url:
+        parts = url.split('contentHashId=')
+        base_url = parts[0]
+        contentId = parts[1].split('&')[0] if '&' in parts[1] else parts[1]
+    elif '&contentHashIdl=' in url:
+        base_url, contentId = url.split('&contentHashIdl=')
+    elif 'contentHashIdl=' in url:
+        parts = url.split('contentHashIdl=')
+        base_url = parts[0]
+        contentId = parts[1].split('&')[0] if '&' in parts[1] else parts[1]
+    else:
+        # Fallback - try to extract ID from URL pattern
+        contentId = url.split('/')[-1].split('?')[0] if '/' in url else url
+    
+    # Clean up contentId - remove any trailing URL parameters
+    if '&' in contentId:
+        contentId = contentId.split('&')[0]
+    
+    headers = {
+        'host': 'api.classplusapp.com',
+        'x-access-token': f'{cptoken}',    
+        'accept-language': 'EN',
+        'api-version': '18',
+        'app-version': '1.4.73.2',
+        'build-number': '35',
+        'connection': 'Keep-Alive',
+        'content-type': 'application/json',
+        'device-details': 'Xiaomi_Redmi 7_SDK-32',
+        'device-id': 'c28d3cb16bbdac01',
+        'region': 'IN',
+        'user-agent': 'Mobile-Android',
+        'webengage-luid': '00000187-6fe4-5d41-a530-26186858be4c',
+        'accept-encoding': 'gzip'
+    }
+    
+    params = {
+        'contentId': contentId,
+        'offlineDownload': "false"
+    }
 
-                try:
-                    res = requests.get("https://api.classplusapp.com/cams/uploader/video/jw-signed-url", params=params, headers=headers, timeout=10).json()
-                    
-                    if "testbook.com" in base_url or "classplusapp.com/drm" in url or "media-cdn.classplusapp.com/drm" in url:
-                        if 'drmUrls' in res and 'manifestUrl' in res['drmUrls']:
-                            mpd_url = res['drmUrls']['manifestUrl']
-                            mpd, keys = helper.get_mps_and_keys(mpd_url)
-                            url = mpd
-                            keys_string = " ".join([f"--key {key}" for key in keys])
-                        else:
-                            url = res.get("url", url)
-                            keys_string = ""
-                    else:
-                        url = res.get("url", url)
-                        keys_string = ""
-                except Exception as e:
-                    print(f"ClassPlus API Error: {e}")
-                    # Keep original URL if API fails
-                    keys_string = ""
+    try:
+        res = requests.get("https://api.classplusapp.com/cams/uploader/video/jw-signed-url", params=params, headers=headers, timeout=10).json()
+        
+        # Check if it's a DRM URL
+        if "testbook.com" in base_url or "classplusapp.com/drm" in base_url or "media-cdn.classplusapp.com/drm" in base_url or '/drm/' in base_url:
+            if 'drmUrls' in res and 'manifestUrl' in res['drmUrls']:
+                mpd_url = res['drmUrls']['manifestUrl']
+                mpd, keys = helper.get_mps_and_keys(mpd_url)
+                url = mpd
+                keys_string = " ".join([f"--key {key}" for key in keys])
+            else:
+                url = res.get("url", base_url)
+                keys_string = ""
+        else:
+            url = res.get("url", base_url)
+            keys_string = ""
+            
+        print(f"ClassPlus API Success - contentId: {contentId}, url: {url[:100]}...")
+        
+    except Exception as e:
+        print(f"ClassPlus API Error: {e}")
+        print(f"URL: {base_url}, contentId: {contentId}")
+        # Keep original URL if API fails
+        url = base_url
+        keys_string = ""
 
             elif "d1d34p8vz63oiq" in url or "sec1.pw.live" in url:
                 url = f"https://anonymouspwplayer-907e62cf4891.herokuapp.com/pw?url={url}&token={pwtoken}"
